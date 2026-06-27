@@ -6,6 +6,12 @@ import { redirect } from 'next/navigation'
 import { initUserBoards } from '../init-user-boards'
 
 export const auth = betterAuth({
+  baseURL: {
+    allowedHosts: ['localhost:*', '*.vercel.app'],
+    ...(process.env.BETTER_AUTH_URL
+      ? { fallback: process.env.BETTER_AUTH_URL }
+      : {}),
+  },
   database: mongodbAdapter(mongoDb, { client: mongoClient }),
   emailAndPassword: { enabled: true },
   databaseHooks: {
