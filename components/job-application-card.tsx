@@ -1,19 +1,19 @@
-"use client";
+'use client'
 
-import { JobApplication, Column } from "@/lib/models/models.types";
-import { Card, CardContent } from "./ui/card";
-import { Edit2, ExternalLink, MoreVertical, Plus, Trash2 } from "lucide-react";
+import { JobApplication, Column } from '@/lib/models/models.types'
+import { Card, CardContent } from './ui/card'
+import { Edit2, ExternalLink, MoreVertical, Plus, Trash2 } from 'lucide-react'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
-import { Button } from "./ui/button";
+} from './ui/dropdown-menu'
+import { Button } from './ui/button'
 import {
   deleteJobApplication,
   updateJobApplication,
-} from "@/lib/actions/job-applications";
+} from '@/lib/actions/job-applications'
 import {
   Dialog,
   DialogContent,
@@ -21,15 +21,15 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Label } from "./ui/label";
-import { Input } from "./ui/input";
-import { Textarea } from "./ui/textarea";
-import React, { useState } from "react";
+} from '@/components/ui/dialog'
+import { Label } from './ui/label'
+import { Input } from './ui/input'
+import { Textarea } from './ui/textarea'
+import React, { useState } from 'react'
 interface JobApplicationCardProps {
-  job: JobApplication;
-  columns: Column[];
-  dragHandleProps?: React.HTMLAttributes<HTMLElement>;
+  job: JobApplication
+  columns: Column[]
+  dragHandleProps?: React.HTMLAttributes<HTMLElement>
 }
 
 export default function JobApplicationCard({
@@ -37,47 +37,47 @@ export default function JobApplicationCard({
   columns,
   dragHandleProps,
 }: JobApplicationCardProps) {
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(false)
   const [formData, setFormData] = useState({
     company: job.company,
     position: job.position,
-    location: job.location || "",
-    notes: job.notes || "",
-    salary: job.salary || "",
-    jobUrl: job.jobUrl || "",
-    columnId: job.columnId || "",
-    tags: job.tags?.join(", ") || "",
-    description: job.description || "",
-  });
+    location: job.location || '',
+    notes: job.notes || '',
+    salary: job.salary || '',
+    jobUrl: job.jobUrl || '',
+    columnId: job.columnId || '',
+    tags: job.tags?.join(', ') || '',
+    description: job.description || '',
+  })
 
   async function handleUpdate(e: React.FormEvent) {
-    e.preventDefault();
+    e.preventDefault()
     try {
       const result = await updateJobApplication(job._id, {
         ...formData,
         tags: formData.tags
-          .split(",")
+          .split(',')
           .map((tag) => tag.trim())
           .filter((tag) => tag.length > 0),
-      });
+      })
 
       if (!result.error) {
-        setIsEditing(false);
+        setIsEditing(false)
       }
     } catch (err) {
-      console.error("Failed to move job application: ", err);
+      console.error('Failed to move job application: ', err)
     }
   }
 
   async function handleDelete() {
     try {
-      const result = await deleteJobApplication(job._id);
+      const result = await deleteJobApplication(job._id)
 
       if (result.error) {
-        console.error("Failed to delete job application:", result.error);
+        console.error('Failed to delete job application:', result.error)
       }
     } catch (err) {
-      console.error("Failed to move job application: ", err);
+      console.error('Failed to move job application: ', err)
     }
   }
 
@@ -85,35 +85,35 @@ export default function JobApplicationCard({
     try {
       const result = await updateJobApplication(job._id, {
         columnId: newColumnId,
-      });
+      })
     } catch (err) {
-      console.error("Failed to move job application: ", err);
+      console.error('Failed to move job application: ', err)
     }
   }
   return (
     <>
       <Card
-        className="cursor-pointer transition-shadow hover:shadow-lg bg-white group shadow-sm"
+        className="group cursor-pointer bg-white shadow-sm transition-shadow hover:shadow-lg"
         {...dragHandleProps}
       >
         <CardContent className="p-4">
           <div className="flex items-start justify-between gap-2">
-            <div className="flex-1 min-w-0">
-              <h3 className="font-semibold text-sm mb-1">{job.position}</h3>
-              <p className="text-xs text-muted-foreground mb-2">
+            <div className="min-w-0 flex-1">
+              <h3 className="mb-1 text-sm font-semibold">{job.position}</h3>
+              <p className="text-muted-foreground mb-2 text-xs">
                 {job.company}
               </p>
               {job.description && (
-                <p className="text-xs text-muted-foreground mb-2 line-clamp-2">
+                <p className="text-muted-foreground mb-2 line-clamp-2 text-xs">
                   {job.description}
                 </p>
               )}
               {job.tags && job.tags.length > 0 && (
-                <div className="flex flex-wrap gap-1 mb-2">
+                <div className="mb-2 flex flex-wrap gap-1">
                   {job.tags.map((tag, index) => (
                     <span
                       key={index}
-                      className="px-2 py-0.5 text-xs rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300"
+                      className="rounded-full bg-blue-100 px-2 py-0.5 text-xs text-blue-700 dark:bg-blue-900 dark:text-blue-300"
                     >
                       {tag}
                     </span>
@@ -124,7 +124,7 @@ export default function JobApplicationCard({
                 <a
                   href={job.jobUrl}
                   target="_blank"
-                  className="inline-flex items-center gap-1 text-xs text-primary hover:underline mt-1"
+                  className="text-primary mt-1 inline-flex items-center gap-1 text-xs hover:underline"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <ExternalLink className="h-3 w-3" />
@@ -138,7 +138,7 @@ export default function JobApplicationCard({
                     <MoreVertical className="h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
+                <DropdownMenuContent align="end" className="w-42">
                   <DropdownMenuItem onClick={() => setIsEditing(true)}>
                     <Edit2 className="mr-2 h-4 w-4" />
                     Edit
@@ -288,5 +288,5 @@ export default function JobApplicationCard({
         </DialogContent>
       </Dialog>
     </>
-  );
+  )
 }
